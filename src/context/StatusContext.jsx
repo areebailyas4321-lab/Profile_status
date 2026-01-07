@@ -6,25 +6,61 @@ export const useStatus = () => useContext(StatusContext);
 
 export const StatusProvider = ({ children }) => {
 
-    const [status, setStatus] = useState(() => {
-        return localStorage.getItem('userStatus') || 'Online';
-    });
+    const USER_ID = 'user123';
+    const API_URL = 'http://localhost:5000/api/user-settings';
+
+    const [status, setStatus] = useState('Offline');
 
     const [statusHistory, setStatusHistory] = useState(() => {
         const saved = localStorage.getItem('statusHistory');
         return saved ? JSON.parse(saved) : [];
     });
 
+    // Fetch initial status from DB
     useEffect(() => {
-        console.log('Status changed:', status);
-        localStorage.setItem('userStatus', status);
+        const fetchStatus = async () => {
+            try {
+                const res = await fetch(`${API_URL}/${USER_ID}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    setStatus(data.status);
+                    console.log('Fetched status:', data.status);
+                } else if (res.status === 404) {
+                    // Create if not exists
+                    console.log('User not found, creating...');
+                    const createRes = await fetch(API_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId: USER_ID, status: 'Online' })
+                    });
+                    if (createRes.ok) {
+                        const newData = await createRes.json();
+                        setStatus(newData.status);
+                    }
+                }
+            } catch (err) {
+                console.error('Error fetching status:', err);
+            }
+        };
 
-       
+        fetchStatus();
+    }, []);
 
-    }, [status]);
-
-    const updateStatus = (newStatus) => {
+    const updateStatus = async (newStatus) => {
+        // Optimistic update
         setStatus(newStatus);
+
+        // Update DB
+        try {
+            await fetch(`${API_URL}/${USER_ID}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: newStatus })
+            });
+        } catch (err) {
+            console.error('Error updating status:', err);
+        }
+
         const newEntry = {
             status: newStatus,
             timestamp: new Date().toLocaleString()
@@ -43,7 +79,7 @@ export const StatusProvider = ({ children }) => {
     };
 
     const resetStatus = () => {
-        setStatus('Online');
+        updateStatus('Online');
         setStatusHistory([]);
         localStorage.removeItem('statusHistory');
     };
@@ -74,7 +110,7 @@ export const StatusProvider = ({ children }) => {
             window.removeEventListener('keydown', resetTimer);
             window.removeEventListener('click', resetTimer);
         };
-    }, [status]); 
+    }, [status]);
 
     return (
         <StatusContext.Provider value={{ status, statusHistory, toggleStatus, resetStatus }}>

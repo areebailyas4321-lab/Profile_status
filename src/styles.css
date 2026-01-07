@@ -312,8 +312,20 @@ body.dark,
 
 /* Responsive Design */
 @media (max-width: 600px) {
+  .navbar {
+    padding: 1rem;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .main-content {
+    padding: 1rem;
+    align-items: flex-start; /* Align to top on mobile */
+  }
+
   .profile-card {
     padding: 1.5rem;
+    margin-top: 1rem;
   }
 
   .controls-section {
@@ -323,5 +335,9 @@ body.dark,
   .btn {
     width: 100%;
     justify-content: center;
+  }
+  
+  .navbar-brand h1 {
+    font-size: 1.2rem;
   }
 }

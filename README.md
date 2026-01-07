@@ -14,10 +14,12 @@
 - **Animations**: Smooth transitions powered by Framer Motion.
 - **Responsive Design**: Looks great on all devices.
 
-## 🛠️ Built With
 - [React](https://reactjs.org/)
 - [Vite](https://vitejs.dev/)
 - [Framer Motion](https://www.framer.com/motion/)
+- [Node.js](https://nodejs.org/)
+- [Express.js](https://expressjs.com/)
+- [MongoDB](https://www.mongodb.com/)
 
 ## 📦 Getting Started
 
@@ -38,4 +40,5 @@
 
 ## 🚀 Deployment
 This project is deployed on Vercel.
-[Visit the deployed app](https://profile-status-lv9z.vercel.app/)
+## 📖 Detailed Documentation
+For a step-by-step guide and beginner explanation of the code, backend, and database, see [README_DETAILED.md](./README_DETAILED.md).

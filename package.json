@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently \"npm run dev --prefix backend\" \"vite\"",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "npm run dev --prefix backend"
   },
   "dependencies": {
     "framer-motion": "^12.23.26",
@@ -16,6 +17,7 @@
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react-swc": "^3.7.0",
+    "concurrently": "^9.2.1",
     "vite": "^5.4.0"
   }
 }
